@@ -1,0 +1,69 @@
+schema {
+    query:Query
+    mutation: Mutation
+}
+
+type Query {
+    getConversations: [Conversation]
+    getConversation: Conversation
+}
+
+type Mutation {
+    addConversation(conversation: ConversationInput): Conversation
+    addMessage(message: MessageInput): Message
+    addUser(user: UserInput): User
+}
+
+type UserInput {
+    firstname: String!
+    lastname: String!
+    picture: String!
+}
+
+input MessageInput {
+    type: MessageType!
+    text: String!
+    sender: String!
+    conversation: String!
+}
+
+input ConversationInput {
+    participants: [User]!
+    name: String!
+    picture: String!
+    createdAt: Date!
+}
+
+enum MessageType {
+    text
+    location
+    video
+    image
+}
+
+type Message {
+    ID: ID!
+    text: String
+    sender: User
+    createdAt: Date
+    seen: [User]
+    conversation: Conversation
+    type: MessageType
+}
+
+type Conversation {
+    ID: ID!
+    participants: [User]
+    name: String
+    picture: String
+    createdAt: Date
+    messages: [Message]
+}
+
+type User {
+    ID: ID!
+    firstname: String
+    lastname: String
+    picture: String
+}
+
