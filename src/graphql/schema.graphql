@@ -1,69 +1,68 @@
 schema {
-    query:Query
-    mutation: Mutation
+  query: Query
+  mutation: Mutation
 }
 
 type Query {
-    getConversations: [Conversation]
-    getConversation: Conversation
+  getConversations: [Conversation]
+  getConversation: Conversation
 }
 
 type Mutation {
-    addConversation(conversation: ConversationInput): Conversation
-    addMessage(message: MessageInput): Message
-    addUser(user: UserInput): User
+  addConversation(conversation: ConversationInput): Conversation
+  addMessage(message: MessageInput): Message
+  addUser(user: UserInput): User
 }
 
 type UserInput {
-    firstname: String!
-    lastname: String!
-    picture: String!
+  firstname: String!
+  lastname: String!
+  picture: String!
 }
 
 input MessageInput {
-    type: MessageType!
-    text: String!
-    sender: String!
-    conversation: String!
+  type: MessageType!
+  text: String!
+  sender: String!
+  conversation: String!
 }
 
 input ConversationInput {
-    participants: [User]!
-    name: String!
-    picture: String!
-    createdAt: Date!
+  participants: [User]!
+  name: String!
+  picture: String!
+  createdAt: AWSDateTime!
 }
 
 enum MessageType {
-    text
-    location
-    video
-    image
+  text
+  location
+  video
+  image
 }
 
 type Message {
-    ID: ID!
-    text: String
-    sender: User
-    createdAt: Date
-    seen: [User]
-    conversation: Conversation
-    type: MessageType
+  ID: ID!
+  text: String
+  sender: User
+  createdAt: AWSDateTime
+  seen: [User]
+  conversation: Conversation
+  type: MessageType
 }
 
 type Conversation {
-    ID: ID!
-    participants: [User]
-    name: String
-    picture: String
-    createdAt: Date
-    messages: [Message]
+  ID: ID!
+  participants: [User]
+  name: String
+  picture: String
+  createdAt: AWSDateTime
+  messages: [Message]
 }
 
 type User {
-    ID: ID!
-    firstname: String
-    lastname: String
-    picture: String
+  ID: ID!
+  firstname: String
+  lastname: String
+  picture: String
 }
-
