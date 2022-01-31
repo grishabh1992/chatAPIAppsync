@@ -1,68 +1,106 @@
-schema {
-  query: Query
-  mutation: Mutation
-}
-
-type Query {
-  getConversations: [Conversation]
-  getConversation: Conversation
-}
-
-type Mutation {
-  addConversation(conversation: ConversationInput): Conversation
-  addMessage(message: MessageInput): Message
-  addUser(user: UserInput): User
-}
-
-type UserInput {
-  firstname: String!
-  lastname: String!
-  picture: String!
-}
-
-input MessageInput {
-  type: MessageType!
-  text: String!
-  sender: String!
-  conversation: String!
-}
-
-input ConversationInput {
-  participants: [User]!
-  name: String!
-  picture: String!
-  createdAt: AWSDateTime!
-}
-
 enum MessageType {
-  text
-  location
-  video
-  image
+  TextChat
+  ImageAttachment
+  VideoAttachment
+  LocationAttachment
+  VideoChat
 }
 
-type Message {
-  ID: ID!
-  text: String
-  sender: User
-  createdAt: AWSDateTime
-  seen: [User]
-  conversation: Conversation
-  type: MessageType
+enum NotificationType {
+  Shortlist
+}
+
+type Notification {
+  id: String
+  type: NotificationType!
+  metaData: String
+  isRead: Boolean
+  createdAt: String
+}
+
+input NotificationInput {
+  type: NotificationType!
+  metaData: String!
+  isRead: Boolean!
 }
 
 type Conversation {
-  ID: ID!
-  participants: [User]
-  name: String
+  id: String!
+  #  The Conversation's name.
+  name: String!
   picture: String
-  createdAt: AWSDateTime
+  createdAt: String
   messages: [Message]
 }
 
+type Message {
+  id: String!
+  value: String!
+  createdAt: String
+  authorId: String!
+  recipientId: String!
+  seen: Boolean
+  #  The id of the Conversation this message belongs to. This is the table primary key.
+  conversationId: String!
+  type: MessageType!
+}
+
 type User {
-  ID: ID!
-  firstname: String
-  lastname: String
+  id: String
+  firstName: String
+  lastName: String
   picture: String
+  contactNumber: String
+  userType: Int
+  userFor: Int
+  email: String
+}
+
+input ConversationInput {
+  id: String
+  name: String
+}
+
+input MessageInput {
+  value: String!
+  createdAt: String
+  authorId: String!
+  recipientId: String!
+  seen: Boolean
+  conversationId: String!
+  type: MessageType!
+}
+
+type Mutation {
+  createConversation(conversation: ConversationInput): Conversation
+  addMessage(message: MessageInput): Message
+  createUser(user: UserInput): User
+  addNotification(notification: NotificationInput): Notification
+}
+
+type Query {
+  conversations: [Conversation]
+  conversation(id: String!): Conversation
+  users: [User]
+  notifications: [Notification]
+}
+
+type Subscription {
+  onCreateConversation: Conversation
+    @aws_subscribe(mutations: ["createConversation"])
+  onAddMessage: Message @aws_subscribe(mutations: ["addMessage"])
+  onCreateUser: User @aws_subscribe(mutations: ["createUser"])
+  onCreateNotification: Notification
+    @aws_subscribe(mutations: ["addNotification"])
+}
+
+input UserInput {
+  id: String!
+  firstName: String!
+  lastName: String!
+  picture: String
+  contactNumber: String
+  userType: Int
+  userFor: Int
+  email: String
 }

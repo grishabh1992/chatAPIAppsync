@@ -1,11 +1,7 @@
-export interface Message {
+export interface Message {}
 
-}
+export interface Conversation {}
 
-export interface Conversation {
+export interface User {}
 
-}
-
-export interface User {
-
-}
+export interface Notification {}
